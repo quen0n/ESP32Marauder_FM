@@ -1071,6 +1071,16 @@ void WiFiScan::StopScan(uint8_t scan_mode)
   #ifdef HAS_GPS
     gps_obj.disable_queue();
   #endif
+    // lef off
+  #ifdef MARAUDER_FLIPPER
+    flipper_led.offLED();
+  #elif defined(XIAO_ESP32_S3)
+    xiao_led.setColor(0, 0, 0);
+  #elif defined(MARAUDER_M5STICKC)
+    stickc_led.setColor(0, 0, 0);
+  #else
+    led_obj.setColor(0, 0, 0);
+  #endif
 }
 
 String WiFiScan::getStaMAC()
@@ -2945,7 +2955,7 @@ void WiFiScan::RunSourApple(uint8_t scan_mode, uint16_t color) {
     #elif defined(MARAUDER_M5STICKC)
       stickc_led.sniffLED();
     #else
-      led_obj.setMode(MODE_SNIFF);
+      led_obj.setMode(MODE_ATTACK);
     #endif
 
   #endif

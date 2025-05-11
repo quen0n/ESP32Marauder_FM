@@ -259,6 +259,20 @@ void setup()
   #if defined(HAS_SD)
     // Do some SD stuff
     if(sd_obj.initSD()) {
+// Green led
+      #ifdef XIAO_ESP32_S3
+        xiao_led.setColor(0, 255, 0);
+        delay(200);
+        xiao_led.setColor(0, 0, 0);
+      #elif defined(MARAUDER_M5STICKC)
+        stickc_led.setColor(0, 255, 0);
+        delay(200);
+        stickc_led.setColor(0, 0, 0);
+      #else
+        led_obj.setColor(0, 255, 0);
+        delay(200);
+        led_obj.setColor(0, 0, 0);
+      #endif
       #ifdef HAS_SCREEN
         //display_obj.tft.println(F(text_table0[3]));
       #endif
@@ -268,6 +282,20 @@ void setup()
         //display_obj.tft.setTextColor(TFT_RED, TFT_BLACK);
         //display_obj.tft.println(F(text_table0[4]));
         //display_obj.tft.setTextColor(TFT_CYAN, TFT_BLACK);
+      #endif
+            // Red led
+      #ifdef XIAO_ESP32_S3
+        xiao_led.setColor(255, 0, 0);
+        delay(200);
+        xiao_led.setColor(0, 0, 0);
+      #elif defined(MARAUDER_M5STICKC)
+        stickc_led.setColor(255, 0, 0);
+        delay(200);
+        stickc_led.setColor(0, 0, 0);
+      #else
+        led_obj.setColor(255, 0, 0);
+        delay(200);
+        led_obj.setColor(0, 0, 0);
       #endif
     }
   #endif
