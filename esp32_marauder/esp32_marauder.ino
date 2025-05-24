@@ -34,7 +34,7 @@ https://www.online-utility.org/image/convert/to/XBM
 #endif
 #include "Buffer.h"
 
-#ifdef MARAUDER_FLIPPER
+#ifdef HAS_FLIPPER_LED
   #include "flipperLED.h"
 #elif defined(XIAO_ESP32_S3)
   #include "xiaoLED.h"
@@ -105,7 +105,7 @@ CommandLine cli_obj;
   AXP192 axp192_obj;
 #endif
 
-#ifdef MARAUDER_FLIPPER
+#ifdef HAS_FLIPPER_LED
   flipperLED flipper_led;
 #elif defined(XIAO_ESP32_S3)
   xiaoLED xiao_led;
@@ -122,7 +122,6 @@ const String PROGMEM version_number = MARAUDER_VERSION;
 #endif
 
 uint32_t currentTime  = 0;
-
 
 void backlightOn() {
   #ifdef HAS_SCREEN
@@ -166,10 +165,10 @@ void setup()
   #endif
   
   backlightOff();
-#if BATTERY_ANALOG_ON == 1
-  pinMode(BATTERY_PIN, OUTPUT);
-  pinMode(CHARGING_PIN, INPUT);
-#endif
+  #if BATTERY_ANALOG_ON == 1
+    pinMode(BATTERY_PIN, OUTPUT);
+    pinMode(CHARGING_PIN, INPUT);
+  #endif
   
   // Preset SPI CS pins to avoid bus conflicts
   #ifdef HAS_SCREEN
@@ -192,6 +191,14 @@ void setup()
     delay(10);
 
   Serial.println("ESP-IDF version is: " + String(esp_get_idf_version()));
+
+  #ifdef HAS_PSRAM
+    if (psramInit()) {
+      Serial.println("PSRAM is correctly initialized");
+    } else {
+      Serial.println("PSRAM not available");
+    }
+  #endif
 
   #ifdef HAS_SCREEN
     display_obj.RunSetup();
@@ -267,7 +274,7 @@ void setup()
       #elif defined(MARAUDER_M5STICKC)
         stickc_led.setColor(0, 255, 0);
         delay(200);
-        stickc_led.setColor(0, 0, 0);
+        stickc_led.setColor(0, 0, 0); 
       #else
         led_obj.setColor(0, 255, 0);
         delay(200);
@@ -324,7 +331,7 @@ void setup()
   #endif
 
   // Do some LED stuff
-  #ifdef MARAUDER_FLIPPER
+  #ifdef HAS_FLIPPER_LED
     flipper_led.RunSetup();
   #elif defined(XIAO_ESP32_S3)
     xiao_led.RunSetup();
@@ -425,7 +432,7 @@ void loop()
       menu_function_obj.main(currentTime);
     #endif
   }
-  #ifdef MARAUDER_FLIPPER
+  #ifdef HAS_FLIPPER_LED
     flipper_led.main();
   #elif defined(XIAO_ESP32_S3)
     xiao_led.main();

@@ -170,9 +170,9 @@ class MenuFunctions
     #ifdef HAS_BT
       Menu airtagMenu;
     #endif
-    #ifndef HAS_ILI9341
+    //#ifndef HAS_ILI9341
       Menu wifiStationMenu;
-    #endif
+    //#endif
 
     // WiFi General Menu
     Menu htmlMenu;
@@ -193,7 +193,7 @@ class MenuFunctions
 
     // Menu icons
 
-
+    void displayMenuButtons();
     uint16_t getColor(uint16_t color);
     void drawAvgLine(int16_t value);
     void drawMaxLine(int16_t value, uint16_t color);
@@ -214,8 +214,6 @@ class MenuFunctions
     #if (!defined(HAS_ILI9341) && defined(HAS_BUTTONS))
       void miniKeyboard(Menu * targetMenu);
     #endif
-
-    uint8_t updateTouch(uint16_t *x, uint16_t *y, uint16_t threshold = 600);
 
   public:
     MenuFunctions();
