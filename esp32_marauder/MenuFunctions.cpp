@@ -776,6 +776,8 @@ void MenuFunctions::main(uint32_t currentTime)
           (wifi_scan_obj.currentScanMode == WIFI_SCAN_TARGET_AP_FULL) ||
           (wifi_scan_obj.currentScanMode == WIFI_SCAN_AP_STA) ||
           (wifi_scan_obj.currentScanMode == WIFI_SCAN_PWN) ||
+          (wifi_scan_obj.currentScanMode == WIFI_SCAN_PINESCAN) ||
+          (wifi_scan_obj.currentScanMode == WIFI_SCAN_MULTISSID) ||
           (wifi_scan_obj.currentScanMode == WIFI_SCAN_ESPRESSIF) ||
           (wifi_scan_obj.currentScanMode == WIFI_SCAN_ALL) ||
           (wifi_scan_obj.currentScanMode == WIFI_SCAN_DEAUTH) ||
@@ -846,6 +848,8 @@ void MenuFunctions::main(uint32_t currentTime)
             (wifi_scan_obj.currentScanMode == WIFI_SCAN_TARGET_AP_FULL) ||
             (wifi_scan_obj.currentScanMode == WIFI_SCAN_AP_STA) ||
             (wifi_scan_obj.currentScanMode == WIFI_SCAN_PWN) ||
+            (wifi_scan_obj.currentScanMode == WIFI_SCAN_PINESCAN) ||
+            (wifi_scan_obj.currentScanMode == WIFI_SCAN_MULTISSID) ||
             (wifi_scan_obj.currentScanMode == WIFI_SCAN_ESPRESSIF) ||
             (wifi_scan_obj.currentScanMode == WIFI_SCAN_ALL) ||
             (wifi_scan_obj.currentScanMode == WIFI_SCAN_DEAUTH) ||
@@ -1062,7 +1066,7 @@ void MenuFunctions::main(uint32_t currentTime)
 
   // Menu navigation and paging
   #ifdef HAS_BUTTONS
-    #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(MARAUDER_CYD_MICRO) || defined(MARAUDER_CYD_GUITION))
+    #if !(defined(MARAUDER_V6) || defined(MARAUDER_V6_1) || defined(MARAUDER_CYD_MICRO) || defined(MARAUDER_CYD_GUITION) || defined(MARAUDER_CYD_2USB))
       #if !defined(MARAUDER_M5STICKC) || defined(MARAUDER_M5STICKCP2)
         if (u_btn.justPressed()){
           if ((wifi_scan_obj.currentScanMode == WIFI_SCAN_OFF) ||
@@ -1527,7 +1531,7 @@ void MenuFunctions::orientDisplay()
 {
   display_obj.tft.init();
 
-  display_obj.tft.setRotation(0); // Portrait
+  display_obj.tft.setRotation(SCREEN_ORIENTATION); // Portrait
 
   display_obj.tft.setCursor(0, 0);
 
@@ -1831,6 +1835,18 @@ void MenuFunctions::RunSetup()
     display_obj.clearScreen();
     this->drawStatusBar();
     wifi_scan_obj.StartScan(WIFI_SCAN_PWN, TFT_RED);
+  });
+  
+  this->addNodes(&wifiSnifferMenu, text_table1[63], TFTYELLOW, NULL, PINESCAN_SNIFF, [this]() {
+    display_obj.clearScreen();
+    this->drawStatusBar();
+    wifi_scan_obj.StartScan(WIFI_SCAN_PINESCAN, TFT_YELLOW);
+  });
+
+  this->addNodes(&wifiSnifferMenu, text_table1[64], TFTORANGE, NULL, MULTISSID_SNIFF, [this]() {
+    display_obj.clearScreen();
+    this->drawStatusBar();
+    wifi_scan_obj.StartScan(WIFI_SCAN_MULTISSID, TFT_ORANGE);
   });
   //#ifndef HAS_ILI9341
     this->addNodes(&wifiSnifferMenu, text_table1[49], TFTMAGENTA, NULL, BEACON_SNIFF, [this]() {
